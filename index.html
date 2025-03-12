@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Chat App</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        #chat { max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        #messages { list-style-type: none; padding: 0; }
+        #messages li { margin: 10px 0; }
+        input[type="text"] { width: 80%; padding: 10px; }
+        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <div id="chat">
+        <h2>Real-Time Chat</h2>
+        <ul id="messages"></ul>
+        <input type="text" id="message" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+                const socket = new WebSocket('ws://localhost:8080');
+
+                socket.onmessage = function(event) {
+            const message = event.data;
+            const messagesList = document.getElementById('messages');
+            const messageElement = document.createElement('li');
+            messageElement.textContent = message;
+            messagesList.appendChild(messageElement);
+        };
+
+               function sendMessage() {
+            const inputField = document.getElementById('message');
+            const message = inputField.value;
+            if (message) {
+                socket.send(message); 
+                inputField.value = '';             }
+        }
+    </script>
+</body>
+</html>
